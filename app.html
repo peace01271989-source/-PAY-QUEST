@@ -18,7 +18,7 @@
 <main class="content">
 
 <section class="page active" id="home">
-  <div class="hero"><div class="eyebrow">BASE CAMP</div><h1>次に進む場所だけ。</h1><p>必要な操作は前に。詳細情報は必要になった時だけ開ける構成です。</p><div class="hero-meta"><span class="micro active">STAGING MODE</span><span class="micro">取引送信 OFF</span></div></div>
+  <div class="hero"><div class="eyebrow">BASE CAMP</div><h1>今やることだけ。</h1><p>必要な操作だけを表示します。詳細は必要になった時に確認できます。</p><div class="hero-meta"><span class="micro active">STAGING MODE</span><span class="micro">取引送信 OFF</span></div></div>
   <div class="section"><button class="primary" data-nav="issue">QUESTを発行</button></div>
   <div class="section"><h2 class="section-title">QUEST PREVIEW</h2><article class="quest-card"><div class="quest-top"><div><div class="quest-id">QUEST #PQ-DEMO</div><div class="quest-summary">表示確認用のサンプルQUESTです。実ユーザーの取引ではありません。</div></div><span class="status demo">DEMO</span></div><div class="quest-action"><button class="secondary" data-nav="quest-detail">進行画面を見る</button></div></article></div>
   <div class="notice-strip"><span><b>LOTORA MARKET</b>｜探索QUESTと納品掲示を見る</span><button class="secondary" data-nav="lotora">開く</button></div>
@@ -50,7 +50,15 @@
     </article>
   </div>
   <div class="section" id="secondSourceAction"><button class="secondary full" id="addSecondSource">＋ 2か所目の購入先を追加</button></div>
-  <div class="panel section"><div class="fields"><div class="field"><label>受取方法</label><select id="deliveryMethod"><option>マイページ登録住所</option><option>指定先配送オプション</option><option id="storeHandoffOption">店舗待ち合わせ（実店舗のみ）</option></select></div></div><details><summary>受付・配送条件を確認</summary><div class="rules"><p>1QUESTにつき最大5商品、購入先は最大2か所です。</p><p>EC商品は購入先から配送先へ直接お届けします。商品合計150,000円以上は通常送料0円です。</p><p>実店舗は商品代合計50,000円以上かつ東京都23区内が受付対象です。配送は1か所目の購入先を距離判定の起点とします。</p><p>大型・重量物は見積時に配送方法、購入店の公式配送・設置・搬入サービス等を確認します。</p></div></details><div class="section"><button class="primary" id="issueSubmit">この内容でQUEST発行</button></div><div class="lock">STAGINGのため送信は停止中。画面遷移・入力・条件判定のみ確認できます。</div></div>
+  <div class="panel section">
+    <div class="gate" id="ecDeliveryFixed"><strong>EC商品の配送先</strong><br>EC商品はマイページの登録住所へ、購入先から直接配送します。配送先の選択はありません。</div>
+    <div id="storeDeliveryBlock" hidden>
+      <div class="section-title">実店舗商品の受取方法</div>
+      <div class="fields"><div class="field"><label>受取方法</label><select id="storeDeliveryMethod"><option>マイページ登録住所へ配送</option><option>指定先配送オプション</option><option>店舗待ち合わせ</option></select></div></div>
+      <div class="branch-note section">この選択は実店舗商品にだけ適用されます。EC商品が同じQUESTに含まれる場合も、EC商品は登録住所へ直送します。</div>
+    </div>
+    <details><summary>受付・配送条件を確認</summary><div class="rules"><p>1QUESTにつき最大5商品、購入先は最大2か所です。</p><p>EC商品は購入先からマイページ登録住所へ直接お届けします。商品合計150,000円以上は通常送料0円です。</p><p>実店舗は商品代合計50,000円以上かつ東京都23区内が受付対象です。実店舗商品の受取方法は、登録住所への配送・指定先配送・店舗待ち合わせから選べます。配送は1か所目の購入先を距離判定の起点とします。</p><p>大型・重量物は見積時に配送方法、購入店の公式配送・設置・搬入サービス等を確認します。</p></div></details><div class="section"><button class="primary" id="issueSubmit">この内容でQUEST発行</button></div><div class="lock">STAGINGのため送信は停止中。画面遷移・入力・条件判定のみ確認できます。</div>
+  </div>
 </section>
 
 <section class="page" id="lotora">
@@ -121,7 +129,8 @@ document.getElementById('addSecondSource').onclick=()=>{document.querySelector('
 function checkStore(idx){const card=document.querySelector(`[data-source-card="${idx}"]`);if(card.hidden||card.dataset.sourceType!=='STORE')return true;const a=(card.querySelector(`[data-store-address="${idx}"]`).value||'').trim(),el=card.querySelector(`[data-store-eligibility="${idx}"]`),w=TOKYO23.find(x=>a.includes(x));let total=0;card.querySelectorAll(`[data-items="${idx}-STORE"] .item-block`).forEach(i=>{const p=Number(i.querySelector('.store-price')?.value||0),q=Math.max(Number(i.querySelector('.store-qty')?.value||1),1);total+=p*q});if(!a&&!total){el.className='eligibility section';el.textContent='実店舗QUESTは商品代合計50,000円以上かつ東京都23区内の店舗が対象です。';return false}if(total<50000){el.className='eligibility fail section';el.textContent=`対象外：この購入先の商品代合計は ¥${total.toLocaleString()}。50,000円以上が必要です。`;return false}if(!w){el.className='eligibility fail section';el.textContent='対象外：実店舗QUESTは東京都23区内の店舗のみ受付できます。';return false}el.className='eligibility pass section';el.textContent=`受付対象：${w}／この購入先の商品代合計 ¥${total.toLocaleString()}`;return true}
 function updateAllStoreEligibility(){checkStore(1);checkStore(2)}document.querySelectorAll('[data-store-address]').forEach(i=>i.addEventListener('input',updateAllStoreEligibility));
 function hasStoreSource(){return [...document.querySelectorAll('[data-source-card]')].some(c=>!c.hidden&&c.dataset.sourceType==='STORE')}
-function updateDeliveryOptions(){const opt=document.getElementById('storeHandoffOption'),select=document.getElementById('deliveryMethod'),store=hasStoreSource();opt.hidden=!store;if(!store&&select.value.includes('店舗待ち合わせ'))select.value='マイページ登録住所'}
+function hasEcSource(){return [...document.querySelectorAll('[data-source-card]')].some(c=>!c.hidden&&c.dataset.sourceType==='EC')}
+function updateDeliveryOptions(){const ec=document.getElementById('ecDeliveryFixed'),store=document.getElementById('storeDeliveryBlock');ec.hidden=!hasEcSource();store.hidden=!hasStoreSource();if(store.hidden){const select=document.getElementById('storeDeliveryMethod');if(select)select.value='マイページ登録住所へ配送'}}
 document.getElementById('issueSubmit').onclick=()=>{if(visibleItemCount()>5)return toast('1QUESTは最大5商品です。');if(hasStoreSource()&&(!checkStore(1)||!checkStore(2)))return toast('実店舗の受付条件を確認してください。');toast('STAGING：QUEST発行の送信は停止中です。')};
 document.querySelectorAll('.tab').forEach(tab=>tab.onclick=()=>{document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===tab));document.getElementById('wantBoard').hidden=tab.dataset.kind!=='want';document.getElementById('sellBoard').hidden=tab.dataset.kind!=='sell'});
 document.querySelectorAll('[data-market]').forEach(c=>c.onclick=()=>{const d=marketData[c.dataset.market];document.getElementById('marketType').textContent=d.type;document.getElementById('marketTitle').textContent=d.title;document.getElementById('marketPhoto').className='market-detail-photo '+d.photo;document.getElementById('marketKv').innerHTML=d.rows.map(r=>`<div class="kv-row"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('');document.getElementById('marketAction').textContent=d.action;go('market-detail')});document.getElementById('marketAction').onclick=()=>toast('STAGING：取引送信は停止中です。');
