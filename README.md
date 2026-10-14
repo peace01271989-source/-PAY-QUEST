@@ -2,6 +2,18 @@
 
 Current staging source for PAY QUEST / GUILD LOTORA / LOTORA MARKET.
 
+## Reception / staffed hours
+
+PAY QUEST accepts applications at any time, but staffed handling is limited to 10:00–18:00 JST.
+
+Locked operating rule:
+- Staffed handling: 10:00–18:00 JST
+- Applications submitted from 10:00 inclusive until before 18:00 are recorded as pending admin approval
+- Applications submitted before 10:00 or from 18:00 onward are still accepted, but are recorded as next-day reception reservations
+- After-hours reservations are scheduled for reception from 10:00 JST the following day
+- Submission never means automatic acceptance
+- Final reception approval and final quotation remain manual admin actions
+
 ## Frozen delivery policy
 
 The current frozen shipping and delivery specification is maintained in [`SHIPPING_POLICY.md`](./SHIPPING_POLICY.md).
