@@ -83,7 +83,7 @@ function syncPayQuestManual(){
   const customers=pqFetch_('customers','id,display_name,email,phone,created_at,auth_user_id,customer_rank,risk_status,residency_country_code,residency_status,registered_postal_code,registered_prefecture,registered_city,registered_address_line1,registered_address_line2');
   const quests=pqFetch_('quests','id,quest_code,customer_id,status,created_at,reception_status,reception_reserved_for');
   const items=pqFetch_('quest_items','id,quest_id,item_name,item_url,quantity,procurement_mode,source_key,source_name,requested_unit_price_yen,created_at,source_ward');
-  const cu=pqRows_('ユーザー管理',23),qu=pqRows_('QUEST台帳',118),it=pqRows_('QUEST商品明細',27);
+  const cu=pqRows_('ユーザー管理',23),qu=pqRows_('QUEST台帳',121),it=pqRows_('QUEST商品明細',27);
   const ci=pqIndex_(cu.values,15,'顧客'),qi=pqIndex_(qu.values,116,'QUEST'),ii=pqIndex_(it.values,23,'商品');
   const userIds=new Set(),userByCustomer=new Map(),questById=new Map(),itemOrdinal=new Map(),updates=[];
   let maxUser=0;
